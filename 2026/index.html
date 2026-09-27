@@ -218,6 +218,8 @@ ul,ol{padding:0;list-style:none}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-5);margin-top:var(--sp-6)}
 .card{display:flex;flex-direction:column;gap:var(--sp-2);padding:var(--sp-5);border:1px solid var(--border-default);border-top:4px solid var(--link-red);border-radius:var(--r-2);text-decoration:none;color:var(--black);background:var(--white);min-height:150px;transition:transform var(--dur-3) var(--ease-out)}
 .card:hover{transform:translateY(-2px)}
+
+.cards>li{display:flex}.cards>li>.card{flex:1}
 .card__meta{font-size:var(--fs-micro);color:var(--ink);font-weight:700;letter-spacing:.04em}
 .card__title{font-weight:700;font-size:18px;line-height:1.35}
 
@@ -446,7 +448,7 @@ ul,ol{padding:0;list-style:none}
     <ul class="cards">
       <li><a class="card" href="https://www.libertyinnorthkorea.or.kr/blog/?bmode=view&idx=128997181" target="_blank" rel="noopener" data-ga="content_click" data-label="blog_info-revolution"><span class="card__meta">블로그 · 2024년 11월</span><span class="card__title">북한의 정보 혁명: 700만 스마트폰과 인터넷이 바꾸는 미래</span></a></li>
       <li><a class="card" href="https://www.libertyinnorthkorea.or.kr/blog/?bmode=view&idx=167284148" target="_blank" rel="noopener" data-ga="content_click" data-label="blog_documentary"><span class="card__meta">블로그 · 2025년 8월</span><span class="card__title">한 편의 다큐가 북한을 바꾸는 과정: 감시망 해제부터 정부폰 해킹까지</span></a></li>
-      <li><a class="card" href="https://www.libertyinnorthkorea.or.kr/blog/?bmode=view&idx=168867882" target="_blank" rel="noopener" data-ga="content_click" data-label="blog_vpn"><span class="card__meta">블로그 · 2025년 12월</span><span class="card__title">북한도 중국처럼 VPN 쓰면 되지 않냐고요? 새로운 접근이 필요한 이유</span></a></li>
+      <li><a class="card" href="https://www.libertyinnorthkorea.or.kr/blog/?bmode=view&idx=174821559" target="_blank" rel="noopener" data-ga="content_click" data-label="blog_sokeel-qa"><span class="card__meta">블로그 · 2026년 9월</span><span class="card__title">인터넷 없는 북한에 외부 정보는 어떻게 들어갈까요? 박석길 공동대표에게 물은 여섯 가지 질문</span></a></li>
     </ul>
   </div>
 </section>
@@ -475,7 +477,7 @@ ul,ol{padding:0;list-style:none}
         <input id="subName" name="name" type="text" autocomplete="name" placeholder="이름" required />
         <label class="sr-only" for="subEmail">이메일 주소</label>
         <input id="subEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="이메일 주소" required />
-        <button type="submit">구독하기</button>
+                <button type="submit" data-ga="signup_click" data-label="footer">구독하기</button>
       </div>
       <div class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
       <div class="sub__consent">
