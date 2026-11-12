@@ -504,7 +504,7 @@ function doKakao(){
   if(!lastScore||!kakaoReady())return;
   var url=shareLink(),text=COPY.share.replace('{score}',fmt(lastScore.score));
   var content={title:COPY.cardTitle,description:text,link:{mobileWebUrl:url,webUrl:url}};
-  if(CARD_IMG)content.imageUrl=CARD_IMG;
+  if(CARD_IMG){content.imageUrl=CARD_IMG;content.imageWidth=800;content.imageHeight=400;}
   try{window.Kakao.Share.sendDefault({objectType:'feed',content:content,buttons:[{title:COPY.cardBtn,link:{mobileWebUrl:url,webUrl:url}}]})}
   catch(e){doShare()}
 }
