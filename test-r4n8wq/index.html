@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--
+  Test page for https://iap.libertyinnorthkorea.or.kr/test-r4n8wq/ (upload index.html and card.png together).
+  1. Search for KAKAO_KEY and paste the JavaScript key there. Without a key the Kakao button stays hidden and the plain share button still works.
+  2. The Kakao script tag near the end pins SDK 2.8.5 with the integrity value from Kakao's tutorial page. If the button never appears, copy the tag from the SDK download page in Kakao Developers.
+  3. The preview tags below (og:) are a starting point; change the title, add a description, swap the image.
+  4. Scores are kept in each visitor's own browser. There is no shared board on this page.
+-->
+<title>북한이 변했음 좋겠음</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap">
+<meta property="og:type" content="website">
+<meta property="og:title" content="북한이 변했음 좋겠음">
+<meta property="og:url" content="https://iap.libertyinnorthkorea.or.kr/test-r4n8wq/">
+<meta property="og:image" content="https://iap.libertyinnorthkorea.or.kr/test-r4n8wq/card.png">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+/* Layout: one phone-width column, doodle sticker look. Counters, a field that zooms out through four scales, a bar, three skills, one big button. Single light look on purpose. */
+:root{--bg:#fff;--ink:#111;--y:#ffe24d;--b:#2f6bff;--r:#ff4d4d;--g:#8a8a8a;--soft:#eee;
+  --hand:'Gaegu','Apple SD Gothic Neo','Malgun Gothic',sans-serif;--plain:'Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--hand);font-size:20px;line-height:1.3;word-break:keep-all;-webkit-user-select:none;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;color:inherit;cursor:pointer}
+input{-webkit-user-select:text;user-select:text}
+:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+#app{max-width:420px;margin:0 auto;padding-block:14px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:100%;display:flex;flex-direction:column;gap:10px;position:relative}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hl{background:var(--y);padding:0 8px;border-radius:6px;transform:rotate(-1.5deg);display:inline-block}
+.pill{border:2.5px solid var(--ink);border-radius:99px;padding:0 12px;font-weight:700;background:var(--bg)}
+.nums{align-items:flex-end}
+.nums b{font-size:36px;line-height:1;white-space:nowrap}
+.lab{font-size:18px;line-height:1.1}
+.rt{text-align:right}
+.blue{color:var(--b)}
+.small{font-size:16px;color:var(--g)}
+.scene{position:relative;border:2.5px solid var(--ink);border-radius:18px 24px 16px 26px;overflow:hidden;background:var(--bg)}
+#field{display:block;width:100%}
+#field.zoom{animation:zoom .7s ease-out}
+@keyframes zoom{from{transform:scale(1.6);opacity:.2}to{transform:scale(1);opacity:1}}
+.stage{position:absolute;top:6px;right:12px;font-size:16px;color:var(--g)}
+.stage .on{color:var(--ink);background:var(--y);padding:0 5px;border-radius:5px}
+.t .f{fill:var(--bg);stroke:var(--ink);stroke-width:2;stroke-linejoin:round;transition:fill .25s}
+.t.s1 .f{fill:var(--y)}
+.t.s2 .f{fill:var(--b)}
+.t .e{stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;fill:none;opacity:0}
+.t.s1 .e,.t.s2 .e{opacity:1}
+.t.s2 .e{stroke:var(--bg)}
+.t .m{stroke:var(--bg);stroke-width:1.8;stroke-linecap:round;fill:none;opacity:0}
+.t.s2 .m{opacity:1}
+.t.hit .f{fill:var(--bg);stroke:var(--r)}
+.t.hit .e,.t.hit .m{opacity:0}
+.outline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;stroke-dasharray:1 5;stroke-linecap:round}
+#guy{position:absolute;left:2px;bottom:0;width:150px;transition:transform .2s}
+#guy svg{display:block;width:100%}
+#guy text{font-family:var(--hand);fill:var(--ink)}
+#guy .fw{display:none}
+#guy.worry{transform:translateY(16px)}
+#guy.worry .fn{display:none}
+#guy.worry .fw{display:block}
+#guy.bounce{animation:bounce .12s}
+@keyframes bounce{50%{transform:translateY(-5px)}}
+.banner{position:absolute;top:34px;left:50%;transform:translateX(-50%) rotate(-2deg);border:2.5px solid var(--ink);border-radius:12px 16px 10px 18px;padding:0 14px;font-size:26px;font-weight:700;background:var(--bg);white-space:nowrap;display:none}
+.banner.bad{display:block;background:var(--r);color:var(--bg)}
+.banner.ok{display:block}
+.float{position:absolute;font-weight:700;font-size:22px;pointer-events:none;animation:up .7s ease-out forwards;text-shadow:-1.5px 0 var(--bg),1.5px 0 var(--bg),0 -1.5px var(--bg),0 1.5px var(--bg)}
+.float.neg{color:var(--r);font-size:28px}
+@keyframes up{to{transform:translateY(-34px);opacity:0}}
+.xp{height:14px;border:2.5px solid var(--ink);border-radius:99px;overflow:hidden;background:var(--bg)}
+#xpFill{height:100%;width:0;background:var(--y);border-right:2.5px solid var(--ink);transition:width .15s}
+.chip{flex:1;border:2.5px solid var(--ink);border-radius:12px 9px 13px 8px;padding:2px 2px;text-align:center;font-size:17px;background:var(--bg)}
+.chip b{display:block;font-size:19px;line-height:1.05}
+#tap{background:var(--y);border:2.5px solid var(--ink);border-radius:16px 20px 14px 22px;padding:10px 0;font-size:30px;font-weight:700;transform:rotate(-1deg);width:100%}
+#tap:active{transform:rotate(-1deg) scale(.97)}
+#tap.frozen{background:var(--soft);color:var(--g);border-color:var(--g)}
+.over{position:absolute;inset:0;background:rgba(255,255,255,.95);display:none;flex-direction:column;justify-content:center;gap:14px;padding:22px 16px;text-align:center;z-index:5}
+.over.show{display:flex}
+.over.top{justify-content:flex-start;overflow-y:auto;gap:12px}
+.over.lock button,.over.lock input{pointer-events:none;opacity:.45}
+.over h1{font-size:34px;line-height:1.15;margin:0;font-weight:700}
+.big{font-size:54px;line-height:1;font-weight:700}
+.btn{background:var(--y);border:2.5px solid var(--ink);border-radius:16px 20px 14px 22px;padding:8px 0;font-size:26px;font-weight:700;width:100%}
+.btn.ghost{background:var(--bg)}
+.btn.mini{width:auto;padding:2px 14px;font-size:20px;flex:none}
+.btn[disabled]{opacity:.4;cursor:default}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:2.5px solid var(--ink);border-radius:14px 18px 12px 20px;padding:8px 12px;background:var(--bg);width:100%;font-size:22px}
+#oPick{justify-content:flex-start;padding-top:40px;gap:10px}
+.opt .nm{min-width:0;flex:1}
+.opt .eff{display:block;font-size:17px;line-height:1.15}
+.opt .rt2{text-align:right;white-space:nowrap;flex:none}
+.tag.ty{background:var(--y);padding:0 6px;border-radius:6px}
+.tag.tr{color:var(--r)}
+.banner.st{display:block;background:var(--y);font-size:21px;white-space:normal;width:84%;text-align:center;line-height:1.2;padding:4px 12px}
+.nums{position:relative}
+.tapwrap{position:relative}
+.coach{display:none;position:absolute;z-index:4;background:var(--bg);border:2.5px solid var(--ink);border-radius:12px 16px 10px 18px;padding:5px 10px;font-size:19px;line-height:1.2;pointer-events:none;text-align:center;text-wrap:balance}
+.coach::before{content:attr(data-n);display:block;font-family:var(--plain);font-size:11px;color:var(--g);line-height:1.3}
+#veil{display:none;position:absolute;inset:0;background:rgba(255,255,255,.72);z-index:3}
+#app.c1 #veil,#app.c2 #veil,#app.c3 #veil{display:block}
+#app.c1 #cGoal,#app.c2 #cCol,#app.c3 #cTap{display:block}
+#app.c1 .nums,#app.c2 .scene,#app.c3 .tapwrap{z-index:4}
+.coach::after{content:"";position:absolute;width:12px;height:12px;background:var(--bg);border:2.5px solid var(--ink);border-left:0;border-top:0}
+.coach.up::after{top:-9px;right:30px;transform:rotate(-135deg)}
+.coach.down::after{bottom:-9px;left:50%;margin-left:-6px;transform:rotate(45deg)}
+.coach.plain::after{display:none}
+.coach .cl{display:flex;align-items:center;gap:6px;text-align:left;white-space:nowrap}
+.coach .cl svg{width:26px;height:26px;flex:none}
+.opt:active{background:var(--y)}
+.opt[disabled]{opacity:.35}
+.opt svg{width:38px;height:38px;flex:none}
+.opt .tag{margin-left:auto;font-weight:700;white-space:nowrap}
+.opt .lv{display:block;font-size:17px;color:var(--g)}
+.tbd{border:2px dashed var(--g);border-radius:10px;padding:8px;font-family:Consolas,monospace;font-size:13px;color:var(--g);line-height:1.4}
+.copybox{display:flex;flex-direction:column;gap:6px;align-items:center}
+.copy{margin:0;font-size:23px;line-height:1.25;text-wrap:balance}
+.ph{font-family:var(--plain);font-size:11px;color:var(--g)}
+.legend{display:flex;justify-content:center;align-items:center;gap:10px;font-size:22px}
+.legend svg{width:34px;height:34px}
+.board{border:2.5px solid var(--ink);border-radius:14px 18px 12px 20px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--bg)}
+.board b{font-size:24px}
+#lbIni{font-family:var(--hand);font-size:24px;font-weight:700;border:2.5px solid var(--ink);border-radius:10px;padding:0 10px;text-transform:uppercase;letter-spacing:.12em;background:var(--bg);color:var(--ink);min-width:0;flex:1}
+.lbrow{display:grid;grid-template-columns:2em 1fr auto;gap:8px;font-size:21px;line-height:1.35;font-variant-numeric:tabular-nums;padding:0 4px;text-align:left}
+.lbrow.me{background:var(--y);border-radius:6px}
+.lbrow span:first-child{color:var(--g)}
+.note{font-family:var(--plain);font-size:13px;color:var(--g);margin:0;line-height:1.4}
+.note.bad{color:var(--r)}
+.sharerow .btn{flex:1;min-width:0}
+.sharerow.two .btn{font-size:19px;white-space:nowrap;padding:9px 2px}
+.shbox{font-family:var(--plain);font-size:13px;width:100%;border:2px solid var(--g);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#bCta{display:none}
+</style>
+
+<main id="app">
+  <div id="veil"></div>
+  <header class="row"><span class="hl">북한이 변했음 좋겠음</span><span class="pill" id="timer">3:00</span></header>
+  <section class="row nums">
+    <div><div class="lab">확산</div><b id="nS">0</b></div>
+    <div class="rt"><div class="lab">변화 <span class="small">/ 2,500만</span></div><b id="nC" class="blue">0</b></div>
+    <div class="coach up" id="cGoal" data-n="1/3" style="top:100%;right:0;margin-top:10px;max-width:78%"></div>
+  </section>
+  <section class="scene" id="scene">
+    <svg id="field" viewBox="0 0 300 190" aria-hidden="true"></svg>
+    <div class="stage" id="stageLab"></div>
+    <div class="banner" id="banner"></div>
+    <div class="coach plain" id="cCol" data-n="2/3" style="top:46%;left:56%;transform:translate(-50%,-50%)">
+      <div class="cl"><svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s1"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/></g></svg><span id="cYel"></span></div>
+      <div class="cl"><svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s2"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/><path class="m" d="M-3 3q3 3 6 0"/></g></svg><span id="cBlu"></span></div>
+    </div>
+    <div id="guy">
+      <svg viewBox="0 0 150 96" aria-hidden="true">
+        <path d="M58 8h84q6 0 6 6v20q0 6-6 6H84l-10 9 2-9H58q-6 0-6-6V14q0-6 6-6z" fill="#fff" stroke="#111" stroke-width="2.2" stroke-linejoin="round"/>
+        <text id="bubT" x="100" y="30" text-anchor="middle" font-size="17">변했음 좋겠음</text>
+        <circle cx="30" cy="58" r="19" fill="#fff" stroke="#111" stroke-width="2.5"/>
+        <path d="M12 54q4-18 20-17t17 15q-10-8-19-7t-18 9z" fill="#111"/>
+        <g class="fn"><path d="M21 61h6M34 61h6" stroke="#111" stroke-width="2.5" stroke-linecap="round"/><path d="M26 69h9" stroke="#111" stroke-width="2.2" stroke-linecap="round"/></g>
+        <g class="fw"><circle cx="24" cy="61" r="2.8" fill="#fff" stroke="#111" stroke-width="2"/><circle cx="37" cy="61" r="2.8" fill="#fff" stroke="#111" stroke-width="2"/><path d="M25 70q2-3 4 0t4 0" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/><path d="M52 47q4 6 0 9q-4-3 0-9z" fill="#9cc7ff" stroke="#111" stroke-width="1.4"/></g>
+        <path d="M22 78q8 6 17 0v16H22z" fill="#ffe24d" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>
+        <rect x="44" y="76" width="12" height="15" rx="2" fill="#2f6bff" stroke="#111" stroke-width="2" transform="rotate(12 50 83)"/>
+      </svg>
+    </div>
+  </section>
+  <div class="xp" aria-hidden="true"><div id="xpFill"></div></div>
+  <section class="row">
+    <span class="chip">SD 카드 <b id="lv_sd">Lv.1</b></span>
+    <span class="chip">보안 기술 <b id="lv_sec">Lv.0</b></span>
+    <span class="chip">콘텐츠 <b id="lv_con">Lv.1</b></span>
+  </section>
+  <div class="tapwrap">
+    <div class="coach down" id="cTap" data-n="3/3" style="bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:12px;white-space:nowrap"></div>
+    <button id="tap" type="button">TAP!</button>
+  </div>
+
+  <div class="over show" id="oStart">
+    <h1><span class="hl">북한이 변했음 좋겠음</span></h1>
+    <div class="legend">
+      <svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s1"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/></g></svg> 확산
+      <span>→</span>
+      <svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s2"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/><path class="m" d="M-3 3q3 3 6 0"/></g></svg> 변화
+    </div>
+    <div class="legend"><span class="pill">3:00</span><span class="small">/ 2,500만</span></div>
+    <div class="copybox">
+      <p class="copy">북한 변했음 좋겠음 청년들, 밖에서 지원하는 게 님임</p>
+      <p class="copy">3분간 탭해서 최대한 넓게 확산. 보안 무시하면 걸림</p>
+      <span class="ph">placeholder copy</span>
+    </div>
+    <button class="btn" id="bStart" type="button">START</button>
+    <button class="btn ghost" id="bRank" type="button">RANK</button>
+    <button class="btn mini ghost" id="bTut" type="button" style="align-self:center">튜토리얼 다시 보기</button>
+  </div>
+
+  <div class="over" id="oPick">
+    <h1>Lv UP!</h1>
+    <button class="opt" type="button" data-k="sd"><svg viewBox="0 0 24 24" fill="#ffe24d" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9.5 3v5M12.5 3v5M15.5 4.5V8" fill="none"/></svg><span class="nm">SD 카드<span class="eff" id="u_sd"></span></span><span class="rt2"><span class="tag ty">확산 ↑</span><span class="lv" id="p_sd"></span></span></button>
+    <button class="opt" type="button" data-k="sec"><svg viewBox="0 0 24 24" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9c-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5l4.5-5" fill="none"/></svg><span class="nm">보안 기술<span class="eff" id="u_sec"></span></span><span class="rt2"><span class="tag tr">단속 ↓</span><span class="lv" id="p_sec"></span></span></button>
+    <button class="opt" type="button" data-k="con"><svg viewBox="0 0 24 24" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M10 9v5l5-2.5z" fill="#2f6bff"/></svg><span class="nm">콘텐츠<span class="eff" id="u_con"></span></span><span class="rt2"><span class="tag blue">변화 ↑</span><span class="lv" id="p_con"></span></span></button>
+  </div>
+
+  <div class="over top" id="oEnd">
+    <div class="row"><span class="pill">0:00</span><button class="btn mini ghost" type="button" id="bAgain">AGAIN</button></div>
+    <div>변화<div class="big blue" id="eC">0</div><span class="small">/ 2,500만</span></div>
+    <div>확산 <b id="eS">0</b> &nbsp;·&nbsp; 단속 <b id="eR">0</b> &nbsp;·&nbsp; 걸림 <b id="eK">0</b></div>
+    <div class="row sharerow" id="shareRow">
+      <button class="btn" type="button" id="bShare">친구에게 공유하기</button>
+      <button class="btn ghost" type="button" id="bKakao" hidden>카카오로 공유하기</button>
+    </div>
+    <p class="note" id="shNote" aria-live="polite" style="text-align:center"></p>
+    <input id="shBox" class="shbox" readonly hidden aria-label="Text to share">
+    <section class="board">
+      <div class="row"><b>RANK</b><span class="note" id="lbMode"></span></div>
+      <form class="row" id="lbForm" autocomplete="off">
+        <input id="lbIni" name="ini" maxlength="3" placeholder="AAA" aria-label="Initials, 2 or 3 letters or digits" autocapitalize="characters" spellcheck="false">
+        <button class="btn mini" type="submit" id="lbSave">SAVE</button>
+      </form>
+      <p class="note" id="lbNote" aria-live="polite"></p>
+      <div id="lbList"></div>
+    </section>
+    <button class="btn" type="button" id="bCta" disabled>캠페인 보러 가기</button>
+    <button class="btn mini ghost" id="bTut2" type="button" style="align-self:center">튜토리얼 다시 보기</button>
+  </div>
+
+  <div class="over top" id="oBoard">
+    <div class="row"><b style="font-size:30px">RANK</b><button class="btn mini ghost" type="button" id="bBack">BACK</button></div>
+    <p class="note" id="lbMode2"></p>
+    <div id="lbList2"></div>
+    <p class="note">The board keeps initials and a score. Nothing else.</p>
+  </div>
+</main>
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.5/kakao.min.js" integrity="sha384-v6JKY3z4FUkWq21oZDHZe74YvuPk/WUrVLrDHTBojHXClOSa3iXy7sCXPY1jkFbj" crossorigin="anonymous"></script>
+<script>
+// MODEL-START
+var CFG={N:25000000,T:180,S0:5,
+  tapBase:2,tapK:0.015,autoK:0.095,sdK:0.2,
+  friction:[1,0.5,0.32,0.22],
+  conBase:0.002,conK:0.004,
+  raidFirst:20,raidMin:14,raidMax:24,
+  catchBase:0.85,catchK:0.15,catchFloor:0.1,
+  lossBase:0.7,lossK:0.12,lossFloor:0.1,freeze:5,
+  maxLv:5,
+  xp:[30,90,250,700,2000,6000,17000,50000,150000,400000,1200000,3500000,10000000],
+  stages:[1000,100000,3000000,25000000]};
+function newState(){return {t:0,R:CFG.S0,C:0,peak:CFG.S0,sd:1,sec:0,con:1,picks:0,pending:0,frozen:0,nextRaid:CFG.raidFirst,raids:0,caught:0,over:false}}
+function S(st){return st.R+st.C}
+function canPick(st){return st.sd<CFG.maxLv||st.sec<CFG.maxLv||st.con<CFG.maxLv}
+function bump(st){
+  var s=S(st); if(s>st.peak)st.peak=s;
+  while(st.picks+st.pending<CFG.xp.length&&st.peak>=CFG.xp[st.picks+st.pending]&&canPick(st))st.pending++;
+}
+function stageOf(st){var i=0;while(i<3&&st.peak>=CFG.stages[i])i++;return i}
+function boost(st){return (1+CFG.sdK*st.sd)*CFG.friction[stageOf(st)]}
+function tap(st){
+  if(st.over||st.frozen>0||st.pending>0)return 0;
+  var s=S(st);
+  var add=Math.max(CFG.tapBase,s*CFG.tapK*boost(st))*(1-s/CFG.N);
+  add=Math.max(0,Math.min(add,CFG.N-s));
+  st.R+=add; bump(st); return add;
+}
+function step(st,dt,rnd){
+  var ev=[]; if(st.over||st.pending>0)return ev;
+  st.t+=dt;
+  if(st.frozen>0){st.frozen=Math.max(0,st.frozen-dt)}
+  else{var s=S(st); st.R+=s*CFG.autoK*boost(st)*(1-s/CFG.N)*dt}
+  var conv=st.R*(CFG.conBase+CFG.conK*st.con)*dt; st.R-=conv; st.C+=conv;
+  if(st.t>=st.nextRaid&&st.t<CFG.T){
+    st.raids++; st.nextRaid=st.t+CFG.raidMin+rnd()*(CFG.raidMax-CFG.raidMin);
+    var p=Math.max(CFG.catchFloor,CFG.catchBase-CFG.catchK*st.sec);
+    if(rnd()<p){
+      var f=Math.max(CFG.lossFloor,CFG.lossBase-CFG.lossK*st.sec),lost=st.R*f;
+      st.R-=lost; st.caught++; st.frozen=CFG.freeze; ev.push({type:'caught',lost:lost});
+    }else ev.push({type:'safe'});
+  }
+  bump(st);
+  if(st.t>=CFG.T){st.t=CFG.T;st.over=true;ev.push({type:'over'})}
+  return ev;
+}
+function pick(st,k){
+  if(st.pending<=0||st[k]>=CFG.maxLv)return false;
+  st[k]++; st.pending--; st.picks++; return true;
+}
+// MODEL-END
+
+(function(){
+var $=function(id){return document.getElementById(id)};
+var OUT=[[39.9,124.3],[40.4,124.9],[40.8,125.6],[41.2,126.2],[41.6,126.6],[41.8,126.9],[41.5,127.6],[41.4,128.1],[41.9,128.0],[42.1,128.6],[42.3,129.2],[42.7,129.6],[43.0,129.8],[42.8,130.3],[42.3,130.7],[42.0,130.3],[41.6,129.8],[41.0,129.6],[40.5,129.0],[40.0,128.2],[39.7,127.6],[39.2,127.5],[38.8,128.1],[38.6,128.4],[38.3,127.8],[38.1,127.1],[37.8,126.6],[37.9,126.1],[38.0,125.7],[37.8,125.2],[38.1,124.7],[38.5,125.0],[38.8,125.3],[39.3,125.1],[39.7,124.6]];
+var POLY=OUT.map(function(q){return [(q[1]-124.2)*0.766*30+135,(43.1-q[0])*30+26]});
+function inside(x,y){var c=false;for(var i=0,j=POLY.length-1;i<POLY.length;j=i++){var a=POLY[i],b=POLY[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function nz(i,j){var v=Math.sin(i*12.9898+j*78.233)*43758.5453;return v-Math.floor(v)}
+var SHAPES=[
+  '<circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/><path class="m" d="M-3 3q3 3 6 0"/>',
+  '<path class="f" d="M-9 -1L0 -9L9 -1V8H-9z"/><path class="e" d="M-2 8V3h4v5"/>',
+  '<path class="f" d="M-11 8V-2h6V8zM-4 8V-9h7V8zM4 8V-4h7V8z"/>',
+  '<circle class="f" r="3.8" style="stroke-width:1.5"/>'];
+var NAMES=['마을','군','도','전국'];
+// COPY-START placeholder lines (2026-11-11, Opus 5.5 in the title's voice). Swap the strings here; ids are elements on the page.
+var COPY={
+  dom:{cGoal:'3분 안에 생각 바뀐 사람 수가 점수임',cYel:'정보 받음',cBlu:'생각 바뀜',cTap:'누르면 시작. 탭할수록 많이 퍼짐',
+       u_sd:'확산 속도 빨라짐',u_sec:'덜 걸리고 걸려도 덜 잃음',u_con:'생각 바꾸는 사람 많아짐'},
+  stage:['','마을 전체에 퍼짐. 다음은 군임','군 전체 확산 완료. 이제 도 단위임','도 하나 다 퍼짐. 남은 건 전국임'],
+  share:'북한이 변했음 좋겠음 게임 해봤는데 변화 {score} 나옴. 님도 해보셈',
+  copied:'복사됨',
+  cardTitle:'북한이 변했음 좋겠음',
+  cardBtn:'나도 해보기'
+};
+// COPY-END
+var st=newState(),stage=0,toks=[],prevLit=-1,prevBlue=-1,running=false,coachStep=0,coachAt=0,lastTap=0,last=0,acc=0,floats=0,bannerT=0,bubT=0,lastScore=null;
+
+function fmt(n){
+  n=Math.floor(n);
+  if(n<10000)return n.toLocaleString('ko-KR');
+  if(n<100000)return (Math.floor(n/1000)/10).toFixed(1)+'만';
+  return Math.floor(n/10000).toLocaleString('ko-KR')+'만';
+}
+function lockOver(id,ms){var o=$(id);o.classList.add('lock');setTimeout(function(){o.classList.remove('lock')},ms)}
+function buildField(zoom){
+  var f=$('field'),h='',pts=[],i,j,x,y;
+  if(stage===3){
+    h+='<path class="outline" d="M'+POLY.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1)}).join('L')+'z"/>';
+    for(i=0;i<30;i++)for(j=0;j<19;j++){x=i*10+5;y=j*10+5;if(inside(x,y))pts.push([x,y,nz(i,j)])}
+  }else{
+    for(i=0;i<11;i++)for(j=0;j<6;j++){
+      x=18+i*26.4+(nz(i,j+stage)-0.5)*6;y=38+j*26+(nz(j,i+stage)-0.5)*6;
+      if(x<132&&y>108)continue;
+      var dx=x-190,dy=y-80;pts.push([x,y,Math.sqrt(dx*dx+dy*dy)+nz(i+7,j)*42]);
+    }
+  }
+  pts.sort(function(a,b){return a[2]-b[2]});
+  pts.forEach(function(p){h+='<g class="t" transform="translate('+p[0].toFixed(1)+' '+p[1].toFixed(1)+')">'+SHAPES[stage]+'</g>'});
+  f.innerHTML=h; toks=[].slice.call(f.querySelectorAll('.t')); prevLit=-1; prevBlue=-1;
+  if(zoom){f.classList.remove('zoom');void f.getBoundingClientRect();f.classList.add('zoom')}
+  $('stageLab').innerHTML=NAMES.map(function(n,k){return k===stage?'<span class="on">'+n+'</span>':n}).join(' · ');
+}
+function counts(){
+  var s=S(st),n=toks.length,lit,blue;
+  if(stage===3){lit=Math.round(n*s/CFG.N);blue=Math.round(n*st.C/CFG.N)}
+  else{
+    var lo=stage===0?CFG.S0:CFG.stages[stage-1],hi=CFG.stages[stage];
+    var fr=Math.max(0,Math.min(1,Math.log(Math.max(s,lo)/lo)/Math.log(hi/lo)));
+    lit=Math.max(1,Math.round(n*fr));blue=st.C>=1?Math.max(1,Math.round(lit*Math.sqrt(st.C/s))):0;
+  }
+  return [Math.min(n,lit),Math.min(lit,blue)];
+}
+function paint(force){
+  var c=counts();
+  if(!force&&c[0]===prevLit&&c[1]===prevBlue)return;
+  for(var i=0;i<toks.length;i++){
+    var want=i<c[1]?'s2':i<c[0]?'s1':'';
+    var t=toks[i],has=t.classList.contains('s2')?'s2':t.classList.contains('s1')?'s1':'';
+    if(want!==has){if(has)t.classList.remove(has);if(want)t.classList.add(want)}
+  }
+  prevLit=c[0];prevBlue=c[1];
+}
+function render(){
+  while(stage<3&&st.peak>=CFG.stages[stage]){stage++;buildField(true);if(COPY.stage[stage])banner(COPY.stage[stage],'st',2200)}
+  paint(false);
+  $('nS').textContent=fmt(S(st));
+  $('nC').textContent=fmt(st.C);
+  var rem=Math.max(0,Math.ceil(CFG.T-st.t));
+  $('timer').textContent=Math.floor(rem/60)+':'+('0'+rem%60).slice(-2);
+  var idx=st.picks+st.pending,p=1;
+  if(idx<CFG.xp.length){var lo=idx===0?CFG.S0:CFG.xp[idx-1],hi=CFG.xp[idx];p=Math.max(0,Math.min(1,Math.log(Math.max(st.peak,lo)/lo)/Math.log(hi/lo)))}
+  $('xpFill').style.width=Math.round(p*100)+'%';
+  ['sd','sec','con'].forEach(function(k){$('lv_'+k).textContent=st[k]>=CFG.maxLv?'MAX':'Lv.'+st[k]});
+  var tb=$('tap');
+  if(st.frozen>0){tb.classList.add('frozen');tb.textContent='· · · '+Math.ceil(st.frozen);$('guy').classList.add('worry')}
+  else if(tb.classList.contains('frozen')){tb.classList.remove('frozen');tb.textContent='TAP!';$('guy').classList.remove('worry')}
+}
+function floatTxt(txt,neg){
+  if(floats>10&&!neg)return;
+  var sc=$('scene'),d=document.createElement('div');
+  d.className='float'+(neg?' neg':'');d.textContent=txt;
+  d.style.left=(45+Math.random()*40)+'%';d.style.top=(30+Math.random()*40)+'%';
+  sc.appendChild(d);floats++;
+  setTimeout(function(){if(d.parentNode)sc.removeChild(d);floats--},700);
+}
+function banner(txt,cls,ms){
+  var b=$('banner');b.textContent=txt;b.className='banner '+cls;
+  clearTimeout(bannerT);bannerT=setTimeout(function(){b.className='banner'},ms);
+}
+function bubble(txt,ms){
+  $('bubT').textContent=txt;clearTimeout(bubT);
+  if(ms)bubT=setTimeout(function(){$('bubT').textContent='변했음 좋겠음'},ms);
+}
+function handle(ev){
+  ev.forEach(function(e){
+    if(e.type==='caught'){
+      var before=prevLit,c=counts(),from=Math.min(c[0],Math.max(0,before-3));
+      paint(true);
+      for(var i=from;i<Math.max(before,from+3)&&i<toks.length;i++){(function(t){t.classList.add('hit');setTimeout(function(){t.classList.remove('hit')},900)})(toks[i])}
+      banner('단속!','bad',1600);bubble('단속!',CFG.freeze*1000);floatTxt('−'+fmt(e.lost),true);
+    }else if(e.type==='safe'){banner('단속! SAFE','ok',1300)}
+    else if(e.type==='over'){finish()}
+  });
+}
+function openPick(){
+  ['sd','sec','con'].forEach(function(k){
+    var mx=st[k]>=CFG.maxLv;
+    $('p_'+k).textContent=mx?'MAX':'Lv.'+st[k]+' → '+(st[k]+1);
+    document.querySelector('.opt[data-k="'+k+'"]').disabled=mx;
+  });
+  if(!$('oPick').classList.contains('show')){$('oPick').classList.add('show');lockOver('oPick',450)}
+}
+function afterChange(){if(st.pending>0&&!st.over)openPick()}
+/* tutorial: three callouts, one at a time. A click anywhere moves from 1 to 2 to 3; at 3 the TAP button starts the clock. */
+function setCoach(n){
+  var a=$('app');a.classList.remove('c1','c2','c3');
+  if(n>0)a.classList.add('c'+n);
+  coachStep=n;coachAt=performance.now();
+}
+function doTap(){
+  if(coachStep===3){
+    if(performance.now()-coachAt<350)return;
+    setCoach(0);
+    try{localStorage.setItem('idle-game-coached','1')}catch(e){}
+    running=true;
+  }
+  if(coachStep||!running)return;
+  var now=performance.now();if(now-lastTap<110)return;lastTap=now;
+  var add=tap(st);
+  if(add>0){
+    floatTxt('+'+fmt(Math.max(1,add)),false);
+    var g=$('guy');g.classList.remove('bounce');void g.getBoundingClientRect();g.classList.add('bounce');
+  }
+  afterChange();
+}
+function finish(){
+  running=false;render();
+  lastScore={score:Math.floor(st.C),reached:Math.floor(S(st)),caught:st.caught};
+  $('eC').textContent=fmt(st.C);$('eS').textContent=fmt(S(st));$('eR').textContent=st.raids;$('eK').textContent=st.caught;
+  $('oPick').classList.remove('show');$('oEnd').classList.add('show');$('oEnd').scrollTop=0;lockOver('oEnd',1500);
+  lbNewRun();
+  $('shNote').textContent='';$('shBox').hidden=true;
+  var tb=$('tap').getBoundingClientRect();
+  [$('bCta'),$('bTut2')].forEach(function(el){
+    el.style.marginTop='0px';
+    if(!el.offsetParent)return;
+    var cr=el.getBoundingClientRect();
+    if(cr.top<tb.bottom+12&&cr.bottom>tb.top-12)el.style.marginTop=Math.ceil(tb.bottom+12-cr.top)+'px';
+  });
+}
+function start(forceTutorial){
+  st=newState();stage=0;acc=0;lastScore=null;buildField(false);
+  ['oStart','oEnd','oPick','oBoard'].forEach(function(id){$(id).classList.remove('show')});
+  $('tap').classList.remove('frozen');$('tap').textContent='TAP!';$('guy').classList.remove('worry');bubble('변했음 좋겠음',0);
+  $('banner').className='banner';
+  var seen=false;try{seen=localStorage.getItem('idle-game-coached')==='1'}catch(e){}
+  if(forceTutorial===true||!seen){running=false;setCoach(1)}else{setCoach(0);running=true}
+  render();
+}
+function frame(ts){
+  var dt=Math.min(0.1,(ts-last)/1000);last=ts;
+  if(running){
+    acc+=dt;
+    while(acc>=0.1&&running){handle(step(st,0.1,Math.random));acc-=0.1;afterChange()}
+    render();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* share: a link plus one line. The phone's own share menu where the page is allowed to open it, otherwise copy to the clipboard, otherwise a box to copy from by hand. */
+var SHARE_URL='https://iap.libertyinnorthkorea.or.kr/test-r4n8wq/';
+var SHARE_TAGS='utm_source=game_share&utm_medium=referral';
+function shareLink(){
+  if(!SHARE_URL)return '';
+  if(SHARE_URL.indexOf('claude.ai')!==-1||!SHARE_TAGS)return SHARE_URL;
+  return SHARE_URL+(SHARE_URL.indexOf('?')===-1?'?':'&')+SHARE_TAGS;
+}
+function doShare(){
+  if(!lastScore)return;
+  var text=COPY.share.replace('{score}',fmt(lastScore.score)),url=shareLink(),full=text+(url?' '+url:'');
+  function box(){var b=$('shBox');b.hidden=false;b.value=full;b.focus();b.select();$('shNote').textContent=''}
+  function copy(){
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(full).then(function(){$('shNote').textContent=COPY.copied},box);
+    }else box();
+  }
+  var data={title:document.title,text:text};if(url)data.url=url;
+  var inViewer=!!(window.claude&&typeof window.claude.use==='function'),can=false;
+  try{can=!inViewer&&typeof navigator.share==='function'&&(!navigator.canShare||navigator.canShare(data))}catch(e){can=false}
+  if(can){navigator.share(data).then(function(){},function(err){if(err&&err.name==='AbortError')return;copy()})}
+  else copy();
+}
+
+/* KakaoTalk card: only where Kakao's script has loaded and a key is set (never inside the Claude viewer, which blocks that script). */
+var KAKAO_KEY='43123a57948566b62266a2f62ba4d458'; /* <== FJ: paste the JavaScript 키 between the quotes. Never the REST API or Admin key. */
+var CARD_IMG='https://iap.libertyinnorthkorea.or.kr/test-r4n8wq/card.png';
+function kakaoReady(){try{return !!(KAKAO_KEY&&window.Kakao&&window.Kakao.Share&&typeof window.Kakao.Share.sendDefault==='function')}catch(e){return false}}
+function kakaoInit(){
+  /* Kakao only exposes Kakao.Share after init(), so switch it on first and then look for it */
+  try{
+    if(!KAKAO_KEY||!window.Kakao||typeof window.Kakao.init!=='function')return;
+    if(!window.Kakao.isInitialized())window.Kakao.init(KAKAO_KEY);
+    if(kakaoReady()){$('bKakao').hidden=false;$('shareRow').classList.add('two')}
+  }catch(e){}
+}
+function doKakao(){
+  if(!lastScore||!kakaoReady())return;
+  var url=shareLink(),text=COPY.share.replace('{score}',fmt(lastScore.score));
+  var content={title:COPY.cardTitle,description:text,link:{mobileWebUrl:url,webUrl:url}};
+  if(CARD_IMG)content.imageUrl=CARD_IMG;
+  try{window.Kakao.Share.sendDefault({objectType:'feed',content:content,buttons:[{title:COPY.cardBtn,link:{mobileWebUrl:url,webUrl:url}}]})}
+  catch(e){doShare()}
+}
+
+/* leaderboard: the artifact's shared store when the page runs on claude.ai (one row per person, their best), this device only otherwise */
+var LB={db:null,uid:null,mode:'local',rows:[],local:[],posted:false,myId:null,loading:false,timer:0};
+function lbNote(tx,bad){var e=$('lbNote');e.textContent=tx||'';e.className='note'+(bad?' bad':'')}
+function lbLoadLocal(){try{var v=JSON.parse(localStorage.getItem('idle-game-scores')||'[]');LB.local=Array.isArray(v)?v:[]}catch(e){LB.local=[]}}
+function lbSaveLocal(){try{localStorage.setItem('idle-game-scores',JSON.stringify(LB.local.slice(0,50)))}catch(e){}}
+function lbRows(){var r=LB.mode==='shared'?LB.rows:LB.local;return r.slice().sort(function(a,b){return b.score-a.score}).slice(0,20)}
+function lbRender(){
+  var rows=lbRows(),mode=LB.mode==='shared'?'shared · best per person':'this device only';
+  $('lbMode').textContent=mode;$('lbMode2').textContent=mode;
+  [$('lbList'),$('lbList2')].forEach(function(host,h){
+    host.textContent='';
+    if(!rows.length){var p=document.createElement('p');p.className='note';p.textContent=LB.loading?'Loading the board...':'No scores yet. Play a round and save yours.';host.appendChild(p);return}
+    rows.slice(0,h===0?10:20).forEach(function(r,i){
+      var d=document.createElement('div');d.className='lbrow'+(r.id===LB.myId?' me':'');
+      [String(i+1),r.ini||'???',fmt(r.score)].forEach(function(t,k){var s=document.createElement('span');s.textContent=t;if(k===2)s.className='blue';d.appendChild(s)});
+      host.appendChild(d);
+    });
+  });
+}
+function lbNewRun(){
+  LB.posted=false;$('lbSave').disabled=false;$('lbIni').disabled=false;lbNote('');
+  try{var v=localStorage.getItem('idle-game-ini');if(v&&!$('lbIni').value)$('lbIni').value=v}catch(e){}
+  lbRender();
+}
+function lbInit(){
+  lbLoadLocal();lbRender();
+  if(!(window.claude&&typeof window.claude.use==='function'))return;
+  LB.loading=true;lbRender();
+  LB.timer=setTimeout(function(){LB.loading=false;lbRender()},10000);
+  function off(){clearTimeout(LB.timer);LB.mode='local';LB.loading=false;lbRender()}
+  Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(r){
+    var db=r[0],user=r[1];
+    if(!db){off();return}
+    LB.db=db;
+    Promise.resolve(user&&typeof user.id==='function'?user.id():null).then(function(id){LB.uid=id||null;if(id){LB.myId=id;lbRender()}},function(){});
+    try{
+      db.collection('scores').orderBy('score','desc').limit(20).onSnapshot(function(snap){
+        clearTimeout(LB.timer);LB.mode='shared';LB.loading=false;
+        LB.rows=snap.docs.map(function(d){var x=d.data()||{};return {id:d.id,ini:String(x.ini||'').slice(0,3),score:+x.score||0}});
+        lbRender();
+      },off);
+    }catch(e){off()}
+  },off);
+}
+function lbSubmit(e){
+  e.preventDefault();if(LB.posted||!lastScore)return;
+  var ini=String($('lbIni').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(ini.length<2||ini.length>3){lbNote('Letters or digits only, 2 or 3 of them.',true);return}
+  var row={ini:ini,score:lastScore.score,reached:lastScore.reached,caught:lastScore.caught,v:'idle-0.2',at:new Date().toISOString()};
+  LB.posted=true;$('lbSave').disabled=true;$('lbIni').disabled=true;
+  var lid='l'+Date.now();LB.local.push({id:lid,ini:row.ini,score:row.score});lbSaveLocal();
+  try{localStorage.setItem('idle-game-ini',ini)}catch(e2){}
+  if(!(LB.db&&LB.uid&&LB.mode==='shared')){
+    LB.myId=lid;lbNote(LB.db?'Saved on this device. This account cannot post to the shared board.':'Saved on this device only.');lbRender();return;
+  }
+  var ref=LB.db.doc('scores/'+LB.uid);
+  ref.get().then(function(snap){
+    var old=snap.exists?(+((snap.data()||{}).score)||0):-1;
+    if(old>=row.score){lbNote('Your best on the board is still '+fmt(old)+'.');lbRender();return null}
+    return ref.set(row).then(function(){lbNote('Saved to the shared board.');lbRender()});
+  }).then(null,function(err){
+    lbNote(err&&err.code==='invalid_argument'?'Saved on this device. This account can see the board but cannot post.':'Could not reach the board. Saved on this device.',true);lbRender();
+  });
+}
+
+$('tap').addEventListener('click',doTap);
+$('scene').addEventListener('click',doTap);
+$('app').addEventListener('click',function(e){
+  if(coachStep===1||coachStep===2){e.stopPropagation();e.preventDefault();if(performance.now()-coachAt>350)setCoach(coachStep+1)}
+},true);
+$('bStart').addEventListener('click',function(){start(false)});
+$('bAgain').addEventListener('click',function(){start(false)});
+$('bTut').addEventListener('click',function(){start(true)});
+$('bTut2').addEventListener('click',function(){start(true)});
+$('bRank').addEventListener('click',function(){$('oBoard').classList.add('show');lbRender()});
+$('bBack').addEventListener('click',function(){$('oBoard').classList.remove('show')});
+$('lbForm').addEventListener('submit',lbSubmit);
+$('bShare').addEventListener('click',doShare);
+$('bKakao').addEventListener('click',doKakao);
+[].forEach.call(document.querySelectorAll('.opt'),function(b){
+  b.addEventListener('click',function(){
+    if(pick(st,b.getAttribute('data-k'))){
+      if(st.pending>0)openPick();else $('oPick').classList.remove('show');
+      render();
+    }
+  });
+});
+function boot(){
+  Object.keys(COPY.dom).forEach(function(id){var e=$(id);if(e)e.textContent=COPY.dom[id]});
+  buildField(false);render();lbInit();kakaoInit();requestAnimationFrame(frame);
+}
+window.IdleGame={CFG:CFG,state:function(){return st},start:start,tap:doTap};
+if(window.claude&&window.claude.hot&&typeof window.claude.hot.ready==='function'){window.claude.hot.ready(boot)}else{boot()}
+})();
+</script>
+
+</body>
+</html>
