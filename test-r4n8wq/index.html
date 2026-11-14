@@ -384,7 +384,7 @@ var SHAPES=[
   '<circle class="f" r="3.8" style="stroke-width:1.5"/>'];
 var NAMES=['마을','군','도','전국'];
 var TINTS=['#fff','#fffbe6','#eef4ff','#fff'];
-// COPY-START placeholder lines. Version 3: every line is 음슴체 (SK's voice decision 2026-11-13), written by Opus 5.5 against the voice profile; not yet reviewed by SK or FJ. Swap strings here; keys with data-c fill the page.
+// COPY-START
 var COPY={
   goalLine:'1분간 탭해서 2,500만 명이 다 파래지면 성공임',
   tutTap:'이 버튼을 계속 탭하면 됨',tutYellow:'탭할수록 소식이 퍼짐. 닿은 사람은 노래짐',tutGoal:'스스로 생각을 바꾼 사람은 파래짐. 이 숫자가 점수임',
@@ -407,8 +407,8 @@ var COPY={
   copied:'복사됨',cardTitle:'북한이 변했음 좋겠음',cardBtn:'나도 해보기',bubble:'변했음 좋겠음'
 };
 // COPY-END
-/* The one switch for the Kim Jong-un reactions (crackdown fly-by, worried face at 전국, white flag). NOT approved: needs SY and Sokeel. Off unless the build is asked for the other version. */
-var KJU=false;
+
+var KJU=true;
 var st=newState(),stage=0,toks=[],prevLit=-1,prevBlue=-1,running=false,paused=false,tapped=false,lastTap=0,last=0,acc=0,floats=0,bannerT=0,bubT=0,lastScore=null;
 var tutStep=-1,tutTaps=0,holdD=0,holdT=0,lastTapAt=0,tipRaidShown=false,goalP=-1,kjuKey='',tutAt=0,nightT=0,demoT=[],demoI=0;
 
@@ -608,7 +608,7 @@ function mapSvg(id,frac,size){
 }
 function goalPaint(){var p=Math.floor(200*st.C/CFG.N);if(p!==goalP){goalP=p;$('gm').innerHTML=mapSvg('h',st.C/CFG.N,30)}}
 
-/* Kim Jong-un reactions, only when KJU is true: a doodle face, five moods, a white flag at the end. No name is written anywhere. */
+
 var KJ_BASE="<path d=\"M14 130c0-14 16-22 46-22s46 8 46 22z\" fill=\"#2a2a2a\" stroke=\"#111\" stroke-width=\"3\" stroke-linejoin=\"round\"/><path d=\"M45 109l15 9 15-9\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"84\" cy=\"121\" r=\"3.4\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.5\"/><path d=\"M31 56q-7 1-6 8t7 6\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M89 56q7 1 6 8t-7 6\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M34 44c0-9 10-15 26-15s26 6 26 15c0 6 2 12 6 18 5 8 8 16 6 24-3 13-18 19-38 19s-35-6-38-19c-2-8 1-16 6-24 4-6 6-12 6-18z\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linejoin=\"round\"/><path d=\"M31 82q4 11 14 15M89 82q-4 11-14 15\" fill=\"none\" stroke=\"#111\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M24 42C18 16 34 6 60 6s42 10 36 36c-4-6-10-10-18-11-5-2-11-3-18-3s-13 1-18 3c-8 1-14 5-18 11z\" fill=\"#111\"/>";
 var KJ_MOOD=["<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\"><path d=\"M40 55l11 3M80 55l-11 3\" stroke-width=\"2.6\"/><path d=\"M41 64q5-2.5 10 0M69 64q5-2.5 10 0\" stroke-width=\"2.8\"/></g><path d=\"M53 85q7-5 14 0q-7 6-14 0z\" fill=\"#f2a59d\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>","<path d=\"M40 56h11M80 56h-11\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><circle cx=\"48\" cy=\"64\" r=\"2.6\" fill=\"#111\"/><circle cx=\"76\" cy=\"64\" r=\"2.6\" fill=\"#111\"/><path d=\"M54 87h12\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>","<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\" stroke-width=\"2.6\"><path d=\"M40 58l11-4M80 58l-11-4\"/><path d=\"M53 89q7-5 14 0\"/></g><circle cx=\"46\" cy=\"65\" r=\"2.6\" fill=\"#111\"/><circle cx=\"74\" cy=\"65\" r=\"2.6\" fill=\"#111\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(92 40)\"/>","<path d=\"M39 56l12-5M81 56l-12-5\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><circle cx=\"46\" cy=\"65\" r=\"5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"74\" cy=\"65\" r=\"5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"46\" cy=\"65\" r=\"1.5\" fill=\"#111\"/><circle cx=\"74\" cy=\"65\" r=\"1.5\" fill=\"#111\"/><ellipse cx=\"60\" cy=\"88\" rx=\"5\" ry=\"6.5\" fill=\"#111\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(93 38)\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(25 42)\"/>","<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\" stroke-width=\"2.6\"><path d=\"M39 56l12-5M81 56l-12-5\"/><path d=\"M42 61l8 8M50 61l-8 8M70 61l8 8M78 61l-8 8\"/><path d=\"M50 88q3.3-4 6.7 0t6.6 0t6.7 0\"/></g><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(25 42)\"/>"];
 var KJ_SCAN="<ellipse cx=\"60\" cy=\"90\" rx=\"4.5\" ry=\"5.5\" fill=\"#111\"/><path d=\"M16 124q-10-28 16-50M104 124q10-28-16-50\" fill=\"none\" stroke=\"#111\" stroke-width=\"14\" stroke-linecap=\"round\"/><path d=\"M16 124q-10-28 16-50M104 124q10-28-16-50\" fill=\"none\" stroke=\"#2a2a2a\" stroke-width=\"9\" stroke-linecap=\"round\"/><circle cx=\"45\" cy=\"64\" r=\"13\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\"/><circle cx=\"75\" cy=\"64\" r=\"13\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\"/><path d=\"M34 58q-5 1-5 6M33 65q-5 2-4 7M36 72q-4 3-2 7M86 58q5 1 5 6M87 65q5 2 4 7M84 72q4 3 2 7\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><circle cx=\"45\" cy=\"64\" r=\"6.5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"75\" cy=\"64\" r=\"6.5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"45\" cy=\"64\" r=\"2.8\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.2\"/><circle cx=\"75\" cy=\"64\" r=\"2.8\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.2\"/>";
