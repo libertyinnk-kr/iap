@@ -146,6 +146,7 @@ input{-webkit-user-select:text;user-select:text}
 .ph{font-family:var(--plain);font-size:11px;color:var(--g)}
 .legend{display:flex;justify-content:center;align-items:center;gap:10px;font-size:22px}
 .legend svg{width:34px;height:34px}
+#startMaps svg,#eMap svg,#tGoal svg{width:auto;height:auto}
 .hl2{display:flex;align-items:center;gap:8px;text-align:left;font-size:19px;line-height:1.2}
 .hl2 svg{width:28px;height:28px;flex:none}
 .board{border:2.5px solid var(--ink);border-radius:14px 18px 12px 20px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--bg)}
@@ -159,6 +160,38 @@ input{-webkit-user-select:text;user-select:text}
 .sharerow .btn{flex:1;min-width:0}
 .sharerow.two .btn{font-size:19px;white-space:nowrap;padding:9px 2px}
 .shbox{font-family:var(--plain);font-size:13px;width:100%;border:2px solid var(--g);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--ink)}
+.coach{display:none;position:absolute;z-index:5;background:var(--bg);border:2.5px solid var(--ink);border-radius:12px 16px 10px 18px;padding:5px 12px;font-size:21px;line-height:1.2;pointer-events:none;text-align:center;text-wrap:balance}
+.coach::after{content:"";position:absolute;width:12px;height:12px;background:var(--bg);border:2.5px solid var(--ink);border-left:0;border-top:0}
+.coach.up::after{top:-9px;right:34px;transform:rotate(-135deg)}
+.coach.down::after{bottom:-9px;left:50%;margin-left:-6px;transform:rotate(45deg)}
+#cTap{bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:14px;white-space:nowrap;font-weight:700;background:var(--y)}
+#cTap::after{background:var(--y)}
+#cGoal{top:100%;right:0;margin-top:12px;max-width:86%}
+#app.sp-tap #cTap,#app.nudge #cTap{display:block}
+#app.sp-num #cGoal{display:block}
+#app.nudge #finger{display:block}
+#app.nudge #tap{animation:pulse 1s ease-in-out infinite}
+.gm{display:inline-block;vertical-align:-4px;margin-right:6px}
+.gmap{display:block}
+#kju{position:absolute;left:4px;top:4px;width:84px;z-index:2;pointer-events:none}
+#kju[hidden]{display:none}
+#kju.bounce{animation:bounce .12s}
+.wf{transform-origin:104px 104px;animation:wave .45s ease-in-out infinite alternate}
+@keyframes wave{from{transform:rotate(-8deg)}to{transform:rotate(12deg)}}
+#raidK{display:none}
+#app.kju #raid>svg{display:none}
+#app.kju #raidK{display:block}
+.scene.night{background:#1b2440!important;border-color:var(--r)}
+.scene.night .stage{color:#9aa6cf}
+.scene.night .outline{stroke:#9aa6cf}
+#app.kju #raid{width:120px;top:0}
+#tut .btn{margin-top:4px}
+#tGoal[hidden]{display:none}
+.fws{display:block;width:100%}
+.fw{transform-box:fill-box;transform-origin:center;animation:fwk 1.6s ease-out infinite}
+.fw.b{animation-delay:.5s}
+.fw.c{animation-delay:1s}
+@keyframes fwk{0%{transform:scale(.2);opacity:0}25%{opacity:1}100%{transform:scale(1.15);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 #bCta{display:none}
 </style>
@@ -167,16 +200,17 @@ input{-webkit-user-select:text;user-select:text}
   <div id="veil"></div>
   <header class="row">
     <span class="hl">북한이 변했음 좋겠음</span>
-    <span class="row" style="gap:6px"><button class="iconbtn" id="bHelp" type="button" aria-label="help">?</button><span class="pill" id="timer">2:00</span></span>
+    <span class="row" style="gap:6px"><button class="iconbtn" id="bHelp" type="button" aria-label="help">?</button><span class="pill" id="timer">1:00</span></span>
   </header>
   <section class="row nums">
     <div><div class="lab"><i class="dot y"></i><span data-c="hudReached"></span></div><b id="nS">0</b></div>
-    <div class="rt" id="numC"><div class="lab"><i class="dot b"></i><span data-c="hudChanged"></span> <span class="small">/ 2,500만</span></div><b id="nC" class="blue">0</b></div>
+    <div class="rt" id="numC"><div class="lab"><i class="dot b"></i><span data-c="hudChanged"></span> <span class="small">/ 2,500만</span></div><span class="gm" id="gm"></span><b id="nC" class="blue">0</b></div>
+    <div class="coach up" id="cGoal"></div>
   </section>
   <section class="scene" id="scene">
     <svg id="field" viewBox="0 0 300 190" aria-hidden="true"></svg>
     <div class="stage" id="stageLab"></div>
-    <div id="raid" aria-hidden="true">
+    <div id="raid" aria-hidden="true"><span id="raidK"></span>
       <svg viewBox="0 0 92 150"><path d="M46 44L8 148h84z" fill="rgba(255,226,77,.55)"/><circle cx="30" cy="16" r="10" fill="#fff" stroke="#111" stroke-width="2.5"/><path d="M19 12q11-9 22 0" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/><path d="M30 26v20M30 32l14 8" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/><rect x="40" y="36" width="12" height="8" rx="2" fill="#111"/></svg>
     </div>
     <div class="banner" id="banner"></div>
@@ -198,13 +232,10 @@ input{-webkit-user-select:text;user-select:text}
       <p class="ttext" id="tA"></p>
       <p class="ttext" id="tB"></p>
       <svg id="tDemo" viewBox="0 0 300 70" aria-hidden="true"></svg>
-      <div class="tcards" id="tCards" hidden>
-        <div class="tc"><svg viewBox="0 0 24 24" fill="#ffe24d" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9.5 3v5M12.5 3v5M15.5 4.5V8" fill="none"/></svg><b>SD 카드</b><span data-c="effSd"></span></div>
-        <div class="tc"><svg viewBox="0 0 24 24" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9c-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5l4.5-5" fill="none"/></svg><b>보안 기술</b><span data-c="effSec"></span></div>
-        <div class="tc"><svg viewBox="0 0 24 24" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M10 9v5l5-2.5z" fill="#2f6bff"/></svg><b>콘텐츠</b><span data-c="effCon"></span></div>
-      </div>
-      <div class="row tfoot"><button class="btn mini ghost" id="bSkip" type="button" data-c="btnSkip"></button><span class="note" id="tHint" data-c="tutNext"></span></div>
+      <div class="legend" id="tGoal" hidden></div>
+      <button class="btn" id="tBtn" type="button"></button>
     </div>
+    <div id="kju" hidden></div>
   </section>
   <div class="xp" aria-hidden="true"><div id="xpFill"></div></div>
   <section class="row strip" aria-hidden="true">
@@ -213,18 +244,15 @@ input{-webkit-user-select:text;user-select:text}
     <span class="sti"><svg viewBox="0 0 24 24" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M10 9v5l5-2.5z" fill="#2f6bff"/></svg>콘텐츠 <span class="pips" id="pip_con"></span></span>
   </section>
   <div class="tapwrap">
+    <div class="coach down" id="cTap"></div>
     <button id="tap" type="button" class="pulse"></button>
     <svg id="finger" viewBox="0 0 48 60" aria-hidden="true"><path d="M18 4c3 0 5 2 5 5v17l12 3c3 1 5 3 5 7v9c0 7-5 11-12 11h-8c-5 0-8-2-10-6L4 38c-2-3 1-6 4-4l5 4V9c0-3 2-5 5-5z" fill="#fff" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/></svg>
   </div>
 
   <div class="over show" id="oStart">
     <h1><span class="hl">북한이 변했음 좋겠음</span></h1>
-    <div class="legend">
-      <svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s1"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/></g></svg>
-      <span>→</span>
-      <svg viewBox="-12 -12 24 24" aria-hidden="true"><g class="t s2"><circle class="f" r="9"/><path class="e" d="M-4 -1h2M2 -1h2"/><path class="m" d="M-3 3q3 3 6 0"/></g></svg>
-    </div>
-    <div class="copybox"><p class="copy" data-c="startLine"></p><span class="ph">placeholder copy</span></div>
+    <div class="legend" id="startMaps"></div>
+    <div class="copybox"><p class="copy" data-c="goalLine"></p><span class="ph">placeholder copy</span></div>
     <button class="btn" id="bStart" type="button" data-c="btnStart"></button>
     <button class="btn ghost" id="bRank" type="button" data-c="btnRank"></button>
     <button class="btn mini ghost" id="bTut" type="button" style="align-self:center">튜토리얼 다시 보기</button>
@@ -256,7 +284,10 @@ input{-webkit-user-select:text;user-select:text}
 
   <div class="over top" id="oEnd">
     <div class="row"><span class="pill" id="eTime">0:00</span><button class="btn mini ghost" type="button" id="bAgain" data-c="btnAgain"></button></div>
+    <div id="eFw"></div>
     <p class="sub" id="eHead"></p>
+    <p class="copy" id="eCong"></p>
+    <div class="legend" id="eMap"></div>
     <div><span class="lab"><i class="dot b"></i><span data-c="hudChanged"></span></span><div class="big blue" id="eC">0</div><span class="small">/ 2,500만</span></div>
     <div id="eStats"></div>
     <div class="row sharerow" id="shareRow">
@@ -289,14 +320,14 @@ input{-webkit-user-select:text;user-select:text}
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.5/kakao.min.js" integrity="sha384-v6JKY3z4FUkWq21oZDHZe74YvuPk/WUrVLrDHTBojHXClOSa3iXy7sCXPY1jkFbj" crossorigin="anonymous"></script>
 <script>
 // MODEL-START
-var CFG={N:25000000,T:120,S0:5,
-  tapBase:2,tapK:0.0107,autoK:0.1,sdBoost:[1,1.35,1.7,2.05],
+var CFG={N:25000000,T:60,S0:5,
+  tapBase:2,tapK:0.0238,autoK:0.216,sdBoost:[1,1.4,1.95],
   friction:[1,0.6,0.42,0.3],
-  conRate:[0,0.009,0.016,0.024],
-  raidFirst:15,raidMin:12,raidMax:18,
-  catchP:[0.85,0.6,0.35,0.12],lossF:[0.6,0.42,0.25,0.1],freeze:4,
-  maxLv:3,holdRate:0,tapMs:125,
-  xp:[100,600,3500,20000,120000,800000,5000000],
+  conRate:[0,0.028,0.058],
+  raidFirst:8,raidMin:8,raidMax:12,
+  catchP:[0.85,0.5,0.15],lossF:[0.6,0.35,0.12],freeze:3,
+  maxLv:2,holdRate:0,tapMs:125,
+  xp:[150,20000,1500000],
   stages:[1000,100000,3000000,25000000]};
 function newState(){return {t:0,R:CFG.S0,C:0,peak:CFG.S0,sd:1,sec:0,con:1,picks:0,pending:0,frozen:0,nextRaid:CFG.raidFirst,raids:0,caught:0,over:false,clear:false}}
 function S(st){return st.R+st.C}
@@ -353,38 +384,33 @@ var SHAPES=[
   '<circle class="f" r="3.8" style="stroke-width:1.5"/>'];
 var NAMES=['마을','군','도','전국'];
 var TINTS=['#fff','#fffbe6','#eef4ff','#fff'];
-// COPY-START placeholder lines. Version 2 instructions are plain 해요체 (Opus 5.5, 2026-11-12); the title, the bubble, the stage banners and the share line keep the title's voice. Swap strings here; keys with data-c fill the page.
+// COPY-START placeholder lines. Version 3: every line is 음슴체 (SK's voice decision 2026-11-13), written by Opus 5.5 against the voice profile; not yet reviewed by SK or FJ. Swap strings here; keys with data-c fill the page.
 var COPY={
-  startLine:'탭할수록 북한 사람들에게 바깥세상 소식이 퍼져요',
-  tut1a:'북한 사람들은 바깥세상 소식을 듣기 어려워요',tut1b:'북한이 바뀌길 바라는 청년이 소식을 전하게 도와주세요',
-  tut2:'탭할 때마다 소식이 퍼지고, 닿은 사람은 노랗게 변해요',
-  tut3a:'그중 몇몇은 스스로 생각을 바꾸고 파랗게 변해요',tut3b:'파란 얼굴이 점수예요. 2분 동안 2,500만 명에 도전해요',
-  tut4a:'가끔 단속이 나와요',tut4b:'노란 얼굴 일부가 사라지고 잠깐 멈춰요. 파란 얼굴은 그대로예요',
-  tut5:'게이지가 다 차면 세 가지 중 하나를 골라 키워 보세요',tut6:'준비됐나요? 버튼을 탭해서 시작하세요',tutNext:'화면을 누르면 넘어가요',
-  effSd:'소식이 더 빨리 퍼져요',effSec:'단속 피해가 줄어요',effCon:'생각이 더 빨리 바뀌어요',lvTitle:'레벨업!',lvSub:'셋 중 하나를 골라 키워 보세요',lvReco:'추천',
-  hudReached:'소식 닿음',hudChanged:'생각 바뀜',tapTouch:'탭하기',tapMouse:'클릭하기',
-  btnStart:'시작하기',btnAgain:'다시 하기',btnRank:'순위 보기',btnSave:'저장',btnClose:'닫기',btnSkip:'건너뛰기',btnResume:'계속하기',
-  helpTitle:'게임 방법',helpYellow:'노란 얼굴은 소식이 닿은 사람이에요',helpBlue:'생각이 바뀐 파란 얼굴이 점수예요',helpRaid:'단속이 오면 노란 얼굴 일부가 사라지고 잠시 멈춰요',
-  raidHit:'단속!',raidSafe:'모두 무사해요',resultTimeup:'시간이 다 됐어요',resultClear:'2,500만 명 모두 파랗게 변했어요',timeLeft:'남은 시간',
-  lbLoading:'순위를 불러오는 중이에요',lbEmpty:'아직 기록이 없어요. 첫 기록을 남겨 보세요',lbBad:'이니셜은 영문이나 숫자 2~3자로 입력해 주세요',
-  lbSavedShared:'순위에 저장했어요',lbSavedLocal:'이 기기에만 저장했어요',lbReadOnly:'이 기기에 저장했어요. 이 계정은 순위를 볼 수만 있어요',
-  lbFail:'순위판에 연결하지 못했어요. 이 기기에 저장했어요',lbBest:'최고 기록은 {score} 그대로예요',lbModeShared:'전체 순위, 각자 최고 기록',lbModeLocal:'이 기기 기록만',
-  boardNote:'순위판에는 이니셜과 점수만 남아요',
+  goalLine:'1분간 탭해서 2,500만 명이 다 파래지면 성공임',
+  tutTap:'이 버튼을 계속 탭하면 됨',tutYellow:'탭할수록 소식이 퍼짐. 닿은 사람은 노래짐',tutGoal:'스스로 생각을 바꾼 사람은 파래짐. 이 숫자가 점수임',
+  tipRaid:'단속 옴. 노랑 일부 잃고 3초 멈춤. 파랑은 무사',nudge:'계속 탭하면 됨',
+  effSd:'소식이 더 빨리 퍼짐',effSec:'단속 때 덜 잃음',effCon:'생각이 더 빨리 바뀜',lvTitle:'레벨업!',lvSub:'셋 중 하나 골라서 강화하면 됨',lvReco:'추천',
+  hudReached:'소식 닿음',hudChanged:'생각 바뀜',tapTouch:'탭!',tapMouse:'클릭!',
+  btnStart:'시작',btnAgain:'다시 하기',btnRank:'순위 보기',btnSave:'저장',btnClose:'닫기',btnResume:'계속하기',
+  helpTitle:'게임 방법',helpYellow:'노란 얼굴: 소식이 닿은 사람',helpBlue:'파란 얼굴: 생각을 바꾼 사람. 점수임',helpRaid:'단속이 오면 노랑 일부 잃고 3초 멈춤. 파랑은 무사',
+  raidHit:'단속!',raidSafe:'잃은 사람 없음',resultTimeup:'시간 끝났음',resultClear:'게임 속 2,500만 명 전부 파래짐',timeLeft:'남은 시간',
+  lbLoading:'순위 불러오는 중',lbEmpty:'아직 기록 없음. 첫 기록 남기면 됨',lbBad:'영문이나 숫자 2~3자로 써야 함',
+  lbSavedShared:'순위에 저장됨',lbSavedLocal:'이 기기에만 저장됨',lbReadOnly:'이 기기에 저장됨. 이 계정은 순위 보기만 가능함',
+  lbFail:'연결 실패. 잠시 뒤 다시 해보면 됨',lbBest:'내 최고 기록: {score}명',lbModeShared:'전체 순위',lbModeLocal:'이 기기 순위',
+  boardNote:'순위에는 이니셜과 점수만 남음',
+  tutBlue1:'노랑 중 일부는 스스로 생각을 바꿔 파래짐. 파랑 수가 점수임',tutBlue2:'콘텐츠를 강화하면 노랑이 더 빨리 파래짐',
+  tutRaid1:'단속에 걸리면 노란 사람이 줄어듦',tutRaid2:'한 번 파래진 사람은 다시 돌아가지 않음',
+  btnNext:'다음',btnPlay:'게임 시작하기',congrats:'축하함. 2,500만 명이 모두 파래짐',
   raidWord:'단속',caughtWord:'걸림',
   stage:['','마을 전체에 퍼짐. 다음은 군임','군 전체 확산 완료. 이제 도 단위임','도 하나 다 퍼짐. 남은 건 전국임'],
   share:'북한이 변했음 좋겠음 게임 해봤는데 변화 {score} 나옴. 님도 해보셈',
   copied:'복사됨',cardTitle:'북한이 변했음 좋겠음',cardBtn:'나도 해보기',bubble:'변했음 좋겠음'
 };
 // COPY-END
-var TUT=[
-  {a:'tut1a',b:'tut1b',demo:'intro',need:'any'},
-  {a:'tut2',demo:'tap',need:'tap3',spot:'tap'},
-  {a:'tut3a',b:'tut3b',demo:'change',need:'any',spot:'num'},
-  {a:'tut4a',b:'tut4b',demo:'raid',need:'any'},
-  {a:'tut5',demo:'cards',need:'any'},
-  {a:'tut6',demo:'ready',need:'start',spot:'tap'}];
+/* The one switch for the Kim Jong-un reactions (crackdown fly-by, worried face at 전국, white flag). NOT approved: needs SY and Sokeel. Off unless the build is asked for the other version. */
+var KJU=false;
 var st=newState(),stage=0,toks=[],prevLit=-1,prevBlue=-1,running=false,paused=false,tapped=false,lastTap=0,last=0,acc=0,floats=0,bannerT=0,bubT=0,lastScore=null;
-var tutStep=-1,tutAt=0,tutTaps=0,tutTimers=[],demoT=[],holdD=0,holdT=0;
+var tutStep=-1,tutTaps=0,holdD=0,holdT=0,lastTapAt=0,tipRaidShown=false,goalP=-1,kjuKey='',tutAt=0,nightT=0,demoT=[],demoI=0;
 
 function fmt(n){
   n=Math.floor(n);
@@ -447,7 +473,7 @@ function confetti(n){
 }
 function render(){
   while(stage<3&&st.peak>=CFG.stages[stage]){stage++;buildField(true);if(COPY.stage[stage])banner(COPY.stage[stage],'st',2200);confetti(26)}
-  paint(false);
+  paint(false);goalPaint();kjuPaint();
   $('nS').textContent=fmt(S(st));
   $('nC').textContent=fmt(st.C);
   $('timer').textContent=clock(CFG.T-st.t);
@@ -482,6 +508,7 @@ function bubble(txt,ms){
   $('bubT').textContent=txt;clearTimeout(bubT);
   if(ms)bubT=setTimeout(function(){$('bubT').textContent=COPY.bubble},ms);
 }
+function nightOn(ms){var sc=$('scene');sc.classList.add('night');clearTimeout(nightT);nightT=setTimeout(function(){sc.classList.remove('night')},ms)}
 function raidAnim(){var r=$('raid');r.classList.remove('go');void r.getBoundingClientRect();r.classList.add('go');setTimeout(function(){r.classList.remove('go')},1350)}
 function handle(ev){
   ev.forEach(function(e){
@@ -489,9 +516,9 @@ function handle(ev){
       var before=prevLit,c=counts(),from=Math.min(c[0],Math.max(0,before-3));
       paint(true);
       for(var i=from;i<Math.max(before,from+3)&&i<toks.length;i++){(function(t){t.classList.add('hit');setTimeout(function(){t.classList.remove('hit')},900)})(toks[i])}
-      raidAnim();stopHold();
-      banner(COPY.raidHit,'bad',1600);bubble(COPY.raidHit,CFG.freeze*1000);floatTxt('−'+fmt(e.lost),true);
-    }else if(e.type==='safe'){raidAnim();banner(COPY.raidSafe,'ok',1400)}
+      raidAnim();stopHold();nightOn(CFG.freeze*1000);
+      banner(tipRaidShown?COPY.raidHit:COPY.tipRaid,tipRaidShown?'bad':'st',tipRaidShown?1600:CFG.freeze*1000);tipRaidShown=true;bubble(COPY.raidHit,CFG.freeze*1000);floatTxt('−'+fmt(e.lost),true);
+    }else if(e.type==='safe'){raidAnim();nightOn(1300);banner(COPY.raidSafe,'ok',1400)}
     else if(e.type==='over'){finish()}
   });
 }
@@ -511,15 +538,14 @@ function openPick(){
 function afterChange(){if(st.pending>0&&!st.over)openPick()}
 
 /* input: a press on the button or the field is one tap; holding the button repeats */
+function bop(){['guy','kju'].forEach(function(id){var g=$(id);if(!g||g.hidden)return;g.classList.remove('bounce');void g.getBoundingClientRect();g.classList.add('bounce')})}
 function tapOnce(e){
-  if(tutStep>=0){tutPress();return}
+  var now=performance.now();
+  if(tutStep>=0){if(now-lastTap<CFG.tapMs)return;lastTap=now;tutTapped();bop();return}
   if(!running||paused)return;
-  var now=performance.now();if(now-lastTap<CFG.tapMs)return;lastTap=now;
+  if(now-lastTap<CFG.tapMs)return;lastTap=now;lastTapAt=now;$('app').classList.remove('nudge');
   var add=tap(st);
-  if(add>0){
-    floatTxt('+'+fmt(Math.max(1,add)),false,e);
-    var g=$('guy');g.classList.remove('bounce');void g.getBoundingClientRect();g.classList.add('bounce');
-  }
+  if(add>0){floatTxt('+'+fmt(Math.max(1,add)),false,e);bop()}
   if(!tapped){tapped=true;$('tap').classList.remove('pulse')}
   afterChange();
 }
@@ -529,69 +555,91 @@ function pressStart(e){
   if(CFG.holdRate>0&&tutStep<0){stopHold();holdD=setTimeout(function(){holdT=setInterval(function(){tapOnce(null)},1000/CFG.holdRate)},320)}
 }
 
-/* tutorial: six steps over the field, one at a time */
+/* first play: learn by tapping. The clock waits and only the button is lit. Taps 1 to 3 light faces on the real field; taps 4 to 6 point at the score; then the game starts. */
 function demoBuild(){
-  var h='<rect id="tBeam" x="-90" y="6" width="74" height="58" rx="10" fill="rgba(255,226,77,.55)" stroke="#111" stroke-width="2" stroke-dasharray="4 5"/>';
+  var h='<rect id="tBeam" x="-90" y="6" width="74" height="58" rx="10" fill="rgba(255,226,77,.55)" stroke="#ff4d4d" stroke-width="2" stroke-dasharray="4 5"/>';
   for(var i=0;i<9;i++)h+='<g class="t" transform="translate('+(22+i*32)+' 35)">'+SHAPES[0]+'</g>';
   $('tDemo').innerHTML=h;demoT=[].slice.call($('tDemo').querySelectorAll('.t'));
 }
-function demoSet(arr){demoT.forEach(function(t,i){t.classList.remove('s1','s2','hit');var v=arr[i]||0;if(v===1)t.classList.add('s1');else if(v===2)t.classList.add('s2');else if(v===3)t.classList.add('hit')})}
-function tutClear(){tutTimers.forEach(function(x){clearInterval(x);clearTimeout(x)});tutTimers=[];var b=$('tBeam');if(b)b.setAttribute('x',-90)}
+function demoSet(a){demoT.forEach(function(t,i){t.classList.remove('s1','s2','hit');var v=a[i]||0;if(v===1)t.classList.add('s1');else if(v===2)t.classList.add('s2');else if(v===3)t.classList.add('hit')})}
 function demoRun(kind){
-  var k=0;
-  if(kind==='intro'||kind==='ready'){demoSet([])}
-  else if(kind==='tap'){demoSet([])}
-  else if(kind==='change'){
-    demoSet([1,1,1,1,1,1,1,1,1]);
-    tutTimers.push(setInterval(function(){k=(k+1)%9;var a=[];for(var i=0;i<9;i++)a.push(i<Math.min(k,6)?2:1);demoSet(a)},480));
-  }else if(kind==='raid'){
-    var base=[1,2,1,1,2,1,1,2,1],x=-90;demoSet(base);
-    tutTimers.push(setInterval(function(){
-      x+=9;if(x>330){x=-150;demoSet(base)}
-      $('tBeam').setAttribute('x',x);
-      var a=[];for(var i=0;i<9;i++){var cx=22+i*32;a.push(base[i]===1&&cx<x+60&&x>-80?3:base[i])}
-      demoSet(a);
-    },60));
-  }
+  clearInterval(demoI);var k=0,x=-90,base=[1,2,1,1,2,1,1,2,1];
+  $('tBeam').style.display=kind==='raid'?'block':'none';
+  if(kind==='blue'){demoSet([1,1,1,1,1,1,1,1,1]);demoI=setInterval(function(){k=(k+1)%10;var a=[];for(var i=0;i<9;i++)a.push(i<Math.min(k,6)?2:1);demoSet(a)},450)}
+  else{demoSet(base);demoI=setInterval(function(){x+=9;if(x>330){x=-150;demoSet(base)}$('tBeam').setAttribute('x',x);var a=[];for(var i=0;i<9;i++){var cx=22+i*32;a.push(base[i]===1&&cx<x+60&&x>-80?3:base[i])}demoSet(a)},60)}
 }
-function setTut(n){
-  var a=$('app'),s=TUT[n];
-  tutClear();tutStep=n;tutAt=performance.now();tutTaps=0;
-  a.classList.add('tutoring');a.classList.toggle('sp-tap',s.spot==='tap');a.classList.toggle('sp-num',s.spot==='num');
-  $('tut').hidden=false;
-  $('tStep').textContent=(n+1)+' / '+TUT.length;
-  $('tA').textContent=COPY[s.a]||'';$('tB').textContent=s.b?COPY[s.b]:'';$('tB').hidden=!s.b;
-  var strip=(s.demo==='tap'||s.demo==='change'||s.demo==='raid');
-  $('tDemo').style.display=strip?'block':'none';$('tCards').hidden=s.demo!=='cards';
-  $('tBeam').style.display=s.demo==='raid'?'block':'none';
-  $('tHint').style.visibility=s.need==='any'?'visible':'hidden';
-  $('bSkip').style.visibility=n<TUT.length-1?'visible':'hidden';
-  demoRun(s.demo);
+function tutBegin(){
+  tutStep=0;tutTaps=0;running=false;
+  var a=$('app');a.classList.add('tutoring','sp-tap');a.classList.remove('sp-num','nudge');
+  $('tut').hidden=true;$('cTap').textContent=COPY.tutTap;
 }
-function endTut(){
-  tutClear();tutStep=-1;
-  var a=$('app');a.classList.remove('tutoring','sp-tap','sp-num');$('tut').hidden=true;
-  try{localStorage.setItem('idle-game-coached','2')}catch(e){}
-  running=true;
+function tutOff(){clearInterval(demoI);tutStep=-1;$('tut').hidden=true;$('app').classList.remove('tutoring','sp-tap','sp-num')}
+function tutPanel(n){
+  var P=[null,['tutBlue1','tutBlue2','blue','btnNext'],['tutRaid1','tutRaid2','raid','btnNext'],['goalLine','','goal','btnPlay']][n];
+  tutStep=n;tutAt=performance.now();$('app').classList.remove('sp-tap');$('tut').hidden=false;
+  $('tStep').textContent=n+' / 3';$('tA').textContent=COPY[P[0]];$('tB').textContent=P[1]?COPY[P[1]]:'';$('tB').hidden=!P[1];
+  $('tDemo').style.display=P[2]==='goal'?'none':'block';$('tGoal').hidden=P[2]!=='goal';
+  if(P[2]==='goal'){clearInterval(demoI);$('tGoal').innerHTML=mapSvg('t0',0,64)+'<span>→</span>'+mapSvg('t1',1,64)}else demoRun(P[2]);
+  $('tBtn').textContent=COPY[P[3]];
 }
-function tutPress(){
-  var s=TUT[tutStep];
-  if(s.need==='tap3'){
-    if(tutTaps>=3)return;
-    tutTaps++;var a=[];for(var i=0;i<9;i++)a.push(i<tutTaps*3?1:0);demoSet(a);
-    if(tutTaps>=3){var n=tutStep+1;tutTimers.push(setTimeout(function(){setTut(n)},600))}
-  }else if(s.need==='start'){
-    if(performance.now()-tutAt<350)return;
-    endTut();tapOnce(null);
-  }
+function tutNext(){
+  if(tutStep<1||performance.now()-tutAt<400)return;
+  if(tutStep<3){tutPanel(tutStep+1);return}
+  tutOff();try{localStorage.setItem('idle-game-coached','4')}catch(e){}
+  running=true;lastTapAt=performance.now();render();
+}
+function tutTapped(){
+  if(tutStep!==0)return;
+  tutTaps++;tap(st);
+  if(tutTaps===1)$('cTap').textContent=COPY.tutYellow;
+  if(tutTaps>=3){tutStep=0.5;setTimeout(function(){if(tutStep===0.5)tutPanel(1)},700)}
+  render();
+}
+function nudge(){
+  if(!running||paused||st.frozen>0||st.pending>0)return;
+  if(performance.now()-lastTapAt>2500&&!$('app').classList.contains('nudge')){$('cTap').textContent=COPY.nudge;$('app').classList.add('nudge')}
+}
+
+/* the goal, always on screen: a small outline of the country that fills blue with the score */
+var MAPD='M'+POLY.map(function(p){return ((p[0]-135)*0.4).toFixed(1)+' '+((p[1]-26)*0.4).toFixed(1)}).join('L')+'z';
+function mapSvg(id,frac,size){
+  var h=64*Math.max(0,Math.min(1,frac));
+  return '<svg class="gmap" viewBox="-2 -2 64 68" width="'+size+'" aria-hidden="true"><defs><clipPath id="gc'+id+'"><path d="'+MAPD+'"/></clipPath></defs><path d="'+MAPD+'" fill="#e6e6e6"/><rect clip-path="url(#gc'+id+')" x="0" y="'+(64-h).toFixed(1)+'" width="60" height="'+h.toFixed(1)+'" fill="#2f6bff"/><path d="'+MAPD+'" fill="none" stroke="#111" stroke-width="2.4" stroke-linejoin="round"/></svg>';
+}
+function goalPaint(){var p=Math.floor(200*st.C/CFG.N);if(p!==goalP){goalP=p;$('gm').innerHTML=mapSvg('h',st.C/CFG.N,30)}}
+
+/* Kim Jong-un reactions, only when KJU is true: a doodle face, five moods, a white flag at the end. No name is written anywhere. */
+var KJ_BASE="<path d=\"M14 130c0-14 16-22 46-22s46 8 46 22z\" fill=\"#2a2a2a\" stroke=\"#111\" stroke-width=\"3\" stroke-linejoin=\"round\"/><path d=\"M45 109l15 9 15-9\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"84\" cy=\"121\" r=\"3.4\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.5\"/><path d=\"M31 56q-7 1-6 8t7 6\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M89 56q7 1 6 8t-7 6\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M34 44c0-9 10-15 26-15s26 6 26 15c0 6 2 12 6 18 5 8 8 16 6 24-3 13-18 19-38 19s-35-6-38-19c-2-8 1-16 6-24 4-6 6-12 6-18z\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\" stroke-linejoin=\"round\"/><path d=\"M31 82q4 11 14 15M89 82q-4 11-14 15\" fill=\"none\" stroke=\"#111\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M24 42C18 16 34 6 60 6s42 10 36 36c-4-6-10-10-18-11-5-2-11-3-18-3s-13 1-18 3c-8 1-14 5-18 11z\" fill=\"#111\"/>";
+var KJ_MOOD=["<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\"><path d=\"M40 55l11 3M80 55l-11 3\" stroke-width=\"2.6\"/><path d=\"M41 64q5-2.5 10 0M69 64q5-2.5 10 0\" stroke-width=\"2.8\"/></g><path d=\"M53 85q7-5 14 0q-7 6-14 0z\" fill=\"#f2a59d\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/>","<path d=\"M40 56h11M80 56h-11\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><circle cx=\"48\" cy=\"64\" r=\"2.6\" fill=\"#111\"/><circle cx=\"76\" cy=\"64\" r=\"2.6\" fill=\"#111\"/><path d=\"M54 87h12\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>","<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\" stroke-width=\"2.6\"><path d=\"M40 58l11-4M80 58l-11-4\"/><path d=\"M53 89q7-5 14 0\"/></g><circle cx=\"46\" cy=\"65\" r=\"2.6\" fill=\"#111\"/><circle cx=\"74\" cy=\"65\" r=\"2.6\" fill=\"#111\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(92 40)\"/>","<path d=\"M39 56l12-5M81 56l-12-5\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><circle cx=\"46\" cy=\"65\" r=\"5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"74\" cy=\"65\" r=\"5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"46\" cy=\"65\" r=\"1.5\" fill=\"#111\"/><circle cx=\"74\" cy=\"65\" r=\"1.5\" fill=\"#111\"/><ellipse cx=\"60\" cy=\"88\" rx=\"5\" ry=\"6.5\" fill=\"#111\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(93 38)\"/><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(25 42)\"/>","<g fill=\"none\" stroke=\"#111\" stroke-linecap=\"round\" stroke-width=\"2.6\"><path d=\"M39 56l12-5M81 56l-12-5\"/><path d=\"M42 61l8 8M50 61l-8 8M70 61l8 8M78 61l-8 8\"/><path d=\"M50 88q3.3-4 6.7 0t6.6 0t6.7 0\"/></g><path d=\"M0 0q5 7 0 11q-5-4 0-11z\" fill=\"#9cc7ff\" stroke=\"#111\" stroke-width=\"1.4\" transform=\"translate(25 42)\"/>"];
+var KJ_SCAN="<ellipse cx=\"60\" cy=\"90\" rx=\"4.5\" ry=\"5.5\" fill=\"#111\"/><path d=\"M16 124q-10-28 16-50M104 124q10-28-16-50\" fill=\"none\" stroke=\"#111\" stroke-width=\"14\" stroke-linecap=\"round\"/><path d=\"M16 124q-10-28 16-50M104 124q10-28-16-50\" fill=\"none\" stroke=\"#2a2a2a\" stroke-width=\"9\" stroke-linecap=\"round\"/><circle cx=\"45\" cy=\"64\" r=\"13\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\"/><circle cx=\"75\" cy=\"64\" r=\"13\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"3\"/><path d=\"M34 58q-5 1-5 6M33 65q-5 2-4 7M36 72q-4 3-2 7M86 58q5 1 5 6M87 65q5 2 4 7M84 72q4 3 2 7\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><circle cx=\"45\" cy=\"64\" r=\"6.5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"75\" cy=\"64\" r=\"6.5\" fill=\"#fff\" stroke=\"#111\" stroke-width=\"2.4\"/><circle cx=\"45\" cy=\"64\" r=\"2.8\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.2\"/><circle cx=\"75\" cy=\"64\" r=\"2.8\" fill=\"#ff4d4d\" stroke=\"#111\" stroke-width=\"1.2\"/>";
+function kjuSvg(lv,flag,size){
+  var fl=flag?'<g class="wf"><path d="M104 104V22" stroke="#111" stroke-width="3" stroke-linecap="round"/><path d="M104 23H84l5 8-5 8h20z" fill="#fff" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/></g>':'';
+  return '<svg viewBox="0 0 120 130" width="'+size+'" aria-hidden="true">'+fl+KJ_BASE+KJ_MOOD[lv]+'</svg>';
+}
+/* the 단속 pose: hands curled into rings around the eyes, red pupils, a beam with red edges below */
+function kjuScan(){return '<svg viewBox="0 0 120 250" width="120" aria-hidden="true"><path d="M60 70L4 248h112z" fill="rgba(255,226,77,.32)"/><path d="M60 70L4 248M60 70L116 248" fill="none" stroke="#ff4d4d" stroke-width="2" stroke-dasharray="6 6"/>'+KJ_BASE+KJ_SCAN+'</svg>'}
+function kjuPaint(){
+  if(!KJU)return;
+  var k=$('kju'),show=(stage===3&&tutStep<0);
+  k.hidden=!show;if(!show)return;
+  var sh=st.C/CFG.N,lv=st.clear?4:sh<0.1?0:sh<0.25?1:sh<0.45?2:sh<0.7?3:4,key=lv+(st.clear?'f':'');
+  if(key!==kjuKey){kjuKey=key;k.innerHTML=kjuSvg(lv,st.clear,84)}
+}
+/* fireworks for the 2,500만 ending: three bursts that loop */
+function fwSvg(){
+  var h='<svg class="fws" viewBox="0 0 320 90" aria-hidden="true">',B=[[52,46,'#ff4d4d',''],[270,38,'#2f6bff',' b'],[160,50,'#ffe24d',' c']];
+  B.forEach(function(b){h+='<g class="fw'+b[3]+'">';for(var i=0;i<10;i++){var a=i*Math.PI/5;h+='<path d="M'+(b[0]+Math.cos(a)*10).toFixed(1)+' '+(b[1]+Math.sin(a)*10).toFixed(1)+'L'+(b[0]+Math.cos(a)*30).toFixed(1)+' '+(b[1]+Math.sin(a)*30).toFixed(1)+'" stroke="'+b[2]+'" stroke-width="4" stroke-linecap="round"/>'}h+='</g>'});
+  return h+'</svg>';
 }
 
 function finish(){
   running=false;stopHold();render();
   lastScore={score:Math.floor(st.C),left:st.clear?Math.max(0,Math.round(CFG.T-st.t)):0,reached:Math.floor(S(st)),caught:st.caught};
-  $('eHead').textContent=st.clear?COPY.resultClear:COPY.resultTimeup;
+  $('eHead').textContent=st.clear?COPY.congrats:COPY.resultTimeup;
   $('eTime').textContent=clock(CFG.T-st.t);
   $('eC').textContent=fmt(st.C);
+  $('eFw').innerHTML=st.clear?fwSvg():'';$('eCong').textContent='';
+  $('eMap').innerHTML=mapSvg('e',st.C/CFG.N,84)+(KJU&&st.clear?kjuSvg(4,true,130):'');
   $('eStats').textContent=(st.clear?COPY.timeLeft+' '+clock(CFG.T-st.t)+' · ':'')+COPY.hudReached+' '+fmt(S(st))+' · '+COPY.raidWord+' '+st.raids+' · '+COPY.caughtWord+' '+st.caught;
   $('oPick').classList.remove('show');$('oHelp').classList.remove('show');$('oEnd').classList.add('show');$('oEnd').scrollTop=0;lockOver('oEnd',1500);
   if(st.clear)confetti(70);
@@ -608,13 +656,12 @@ function finish(){
   });
 }
 function start(forceTutorial){
-  st=newState();stage=0;acc=0;lastScore=null;paused=false;tapped=false;stopHold();tutClear();buildField(false);
+  st=newState();stage=0;acc=0;lastScore=null;paused=false;tapped=false;stopHold();tipRaidShown=false;goalP=-1;kjuKey='';lastTapAt=performance.now();buildField(false);
   ['oStart','oEnd','oPick','oBoard','oHelp'].forEach(function(id){$(id).classList.remove('show')});
   var tb=$('tap');tb.classList.remove('frozen');tb.classList.add('pulse');tb.textContent=tapLabel();
   $('guy').classList.remove('worry');bubble(COPY.bubble,0);$('banner').className='banner';
-  var seen=false;try{seen=localStorage.getItem('idle-game-coached')==='2'}catch(e){}
-  if(forceTutorial===true||!seen){running=false;setTut(0)}
-  else{tutStep=-1;$('app').classList.remove('tutoring','sp-tap','sp-num');$('tut').hidden=true;running=true}
+  var seen=false;try{seen=localStorage.getItem('idle-game-coached')==='4'}catch(e){}
+  if(forceTutorial===true||!seen)tutBegin();else{tutOff();$('app').classList.remove('nudge');running=true}
   render();
 }
 function frame(ts){
@@ -622,7 +669,7 @@ function frame(ts){
   if(running&&!paused){
     acc+=dt;
     while(acc>=0.1&&running){handle(step(st,0.1,Math.random));acc-=0.1;afterChange()}
-    render();
+    render();nudge();
   }
   requestAnimationFrame(frame);
 }
@@ -676,8 +723,8 @@ function doKakao(){
 var LB={db:null,uid:null,mode:'local',rows:[],local:[],posted:false,myId:null,loading:false,timer:0};
 function better(a,b){return (b.score-a.score)||((b.left||0)-(a.left||0))}
 function lbNote(tx,bad){var e=$('lbNote');e.textContent=tx||'';e.className='note'+(bad?' bad':'')}
-function lbLoadLocal(){try{var v=JSON.parse(localStorage.getItem('idle-game-scores-v2')||'[]');LB.local=Array.isArray(v)?v:[]}catch(e){LB.local=[]}}
-function lbSaveLocal(){try{localStorage.setItem('idle-game-scores-v2',JSON.stringify(LB.local.slice(0,50)))}catch(e){}}
+function lbLoadLocal(){try{var v=JSON.parse(localStorage.getItem('idle-game-scores-v3')||'[]');LB.local=Array.isArray(v)?v:[]}catch(e){LB.local=[]}}
+function lbSaveLocal(){try{localStorage.setItem('idle-game-scores-v3',JSON.stringify(LB.local.slice(0,50)))}catch(e){}}
 function lbRows(){var r=LB.mode==='shared'?LB.rows:LB.local;return r.slice().sort(better).slice(0,20)}
 function lbRender(){
   var rows=lbRows(),mode=LB.mode==='shared'?COPY.lbModeShared:COPY.lbModeLocal;
@@ -709,7 +756,7 @@ function lbInit(){
     LB.db=db;
     Promise.resolve(user&&typeof user.id==='function'?user.id():null).then(function(id){LB.uid=id||null;if(id){LB.myId=id;lbRender()}},function(){});
     try{
-      db.collection('scores2').orderBy('score','desc').limit(40).onSnapshot(function(snap){
+      db.collection('scores3').orderBy('score','desc').limit(40).onSnapshot(function(snap){
         clearTimeout(LB.timer);LB.mode='shared';LB.loading=false;
         LB.rows=snap.docs.map(function(d){var x=d.data()||{};return {id:d.id,ini:String(x.ini||'').slice(0,3),score:+x.score||0,left:+x.left||0}});
         lbRender();
@@ -721,14 +768,14 @@ function lbSubmit(e){
   e.preventDefault();if(LB.posted||!lastScore)return;
   var ini=String($('lbIni').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(ini.length<2||ini.length>3){lbNote(COPY.lbBad,true);return}
-  var row={ini:ini,score:lastScore.score,left:lastScore.left,reached:lastScore.reached,caught:lastScore.caught,v:'idle-2.0',at:new Date().toISOString()};
+  var row={ini:ini,score:lastScore.score,left:lastScore.left,reached:lastScore.reached,caught:lastScore.caught,v:'idle-3.0',at:new Date().toISOString()};
   LB.posted=true;$('lbSave').disabled=true;$('lbIni').disabled=true;
   var lid='l'+Date.now();LB.local.push({id:lid,ini:row.ini,score:row.score,left:row.left});lbSaveLocal();
   try{localStorage.setItem('idle-game-ini',ini)}catch(e2){}
   if(!(LB.db&&LB.uid&&LB.mode==='shared')){
     LB.myId=lid;lbNote(LB.db?COPY.lbReadOnly:COPY.lbSavedLocal);lbRender();return;
   }
-  var ref=LB.db.doc('scores2/'+LB.uid);
+  var ref=LB.db.doc('scores3/'+LB.uid);
   ref.get().then(function(snap){
     var old=snap.exists?(snap.data()||{}):null;
     if(old&&better({score:+old.score||0,left:+old.left||0},row)<=0){lbNote(COPY.lbBest.replace('{score}',fmt(+old.score||0)));lbRender();return null}
@@ -744,17 +791,14 @@ tapBtn.addEventListener('pointerdown',function(e){pressStart(e)});
 ['pointerup','pointercancel','pointerleave'].forEach(function(n){tapBtn.addEventListener(n,stopHold)});
 window.addEventListener('blur',stopHold);
 tapBtn.addEventListener('click',function(e){if(e.detail===0)tapOnce(null)});
-$('scene').addEventListener('pointerdown',function(e){if(tutStep>=0||!running||paused)return;ripple(e);tapOnce(e)});
-$('app').addEventListener('click',function(e){
-  if(tutStep<0)return;
-  if(e.target.closest&&e.target.closest('#bSkip'))return;
-  e.stopPropagation();
-  var need=TUT[tutStep].need;
-  if(need==='any'){if(performance.now()-tutAt>350)setTut(tutStep+1)}
-  else if(e.detail===0&&e.target.closest&&e.target.closest('#tap'))tutPress();
-},true);
-$('bSkip').addEventListener('click',function(){if(tutStep>=0)setTut(TUT.length-1)});
+$('app').addEventListener('pointerdown',function(e){
+  var t=e.target;if(!t.closest||t.closest('button')||t.closest('input')||t.closest('.over'))return;
+  if(tutStep<0&&(!running||paused))return;
+  if(t.closest('#scene'))ripple(e);
+  tapOnce(e);
+});
 $('bStart').addEventListener('click',function(){start(false)});
+$('tBtn').addEventListener('click',tutNext);
 $('bAgain').addEventListener('click',function(){start(false)});
 ['bTut','bTut2','bTut3'].forEach(function(id){$(id).addEventListener('click',function(){start(true)})});
 $('bHelp').addEventListener('click',function(){
@@ -778,7 +822,9 @@ $('bKakao').addEventListener('click',doKakao);
 function boot(){
   [].forEach.call(document.querySelectorAll('[data-c]'),function(e){var v=COPY[e.getAttribute('data-c')];if(typeof v==='string')e.textContent=v});
   $('tap').textContent=tapLabel();
-  demoBuild();buildField(false);render();lbInit();kakaoInit();requestAnimationFrame(frame);
+  if(KJU){$('app').classList.add('kju');$('raidK').innerHTML=kjuScan()}
+  demoBuild();$('startMaps').innerHTML=mapSvg('s0',0,72)+'<span>→</span>'+mapSvg('s1',1,72);
+  buildField(false);render();lbInit();kakaoInit();requestAnimationFrame(frame);
 }
 window.IdleGame={CFG:CFG,state:function(){return st},start:start,
   /* test aid: advance the game by so many seconds without waiting for the screen */
